@@ -5,6 +5,7 @@ import Menu from './MenuComponent';
 import Contact from './ContactComponent';
 import About from './AboutComponent';
 import Reservation from './ReservationComponent';
+import Favorites from './FavoriteComponent';
 import {DISHES} from '../shared/dishes';
 import { createStackNavigator, createDrawerNavigator, DrawerItems, SafeAreaView } from 'react-navigation';
 import Home from './HomeComponent';
@@ -19,6 +20,8 @@ const mapStateToProps = state => {
 }
 
 const mapDispatchToProps = dispatch => ({
+    addComment:(dishId, rating, comment, author) => dispatch(addComment(dishId, rating, comment, author)),
+    postComment:(dishId, rating, comment, author) => dispatch(postComment(dishId, rating, comment, author)),
     fetchDishes: () => dispatch(fetchDishes()),
     fetchComments: () => dispatch(fetchComments()),
     fetchPromos: () => dispatch(fetchPromos()),
@@ -122,6 +125,23 @@ const ContactNavigator = createStackNavigator({
             })
         });
 
+        const FavoritesNavigator = createStackNavigator({
+            Favorites: { screen: Favorites }
+          }, {
+            navigationOptions: ({ navigation }) => ({
+              headerStyle: {
+                  backgroundColor: "#512DA8"
+              },
+              headerTitleStyle: {
+                  color: "#fff"            
+              },
+              headerTintColor: "#fff",
+              headerLeft: <Icon name="menu" size={24}
+                iconStyle={{ color: 'white' }} 
+                onPress={ () => navigation.navigate('DrawerToggle') } />    
+            })
+          })
+
 const CustomDrawerContentComponent = (props) => (
     <ScrollView>
         <SafeAreaView style = {styles.container}
@@ -205,6 +225,21 @@ const MainNavigator = createDrawerNavigator({
               )
           }
       },
+      Favorites:
+      { screen: FavoritesNavigator,
+        navigationOptions: {
+          title: 'My Favorites',
+          drawerLabel: 'My Favorites',
+          drawerIcon: ({ tintColor, focused }) => (
+            <Icon
+              name='heart'
+              type='font-awesome'            
+              size={24}
+              iconStyle={{ color: tintColor }}
+            />
+          ),
+      }
+    },
       Reservation:
       { screen: ReservationNavigator,
         navigationOptions: {
